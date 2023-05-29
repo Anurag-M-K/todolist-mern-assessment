@@ -7,12 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client && npm run dev",
     "server": "cd server &&  npm start",
-    "start": "concurrently \"npm run server\" \"npm run client\""
+    "start": "cross-env NODE_ENV=development concurrently \"cd server && npm start\" \"cd client && npm run dev\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^8.0.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

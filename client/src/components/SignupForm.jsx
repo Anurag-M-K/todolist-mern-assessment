@@ -1,8 +1,27 @@
 import React from "react";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
+import { Formik , Form }  from 'formik';
+import { TextField } from "./TextField";
+import * as Yup from 'yup';
+import axios from 'axios';
 
 function SignupForm() {
+  const validate = Yup.object({
+    username:Yup.string().max(15, "username must be 15 charecters of less").required("Username is required"),
+    email:Yup.string().email( "Email is invalid").required("Email is required"),
+    password:Yup.string().min(6, "Password must be atleast 6 charecters").required("Password is required"),
+  });
+
+  const handleSubmit = async (values) => {
+    try {
+      console.log("submiting")
+      const response = await axios.post('http://localhost:8080/api/signup', values); 
+      console.log(response.data); 
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
     <div className="md:px-44 px-5 flex flex-col justify-center gap-y-4 items-center">
@@ -19,15 +38,25 @@ function SignupForm() {
                 </h1>
               </div>
               <div className="divide-y divide-gray-200">
+    <Formik 
+    initialValues={{
+      username:"",
+      email:"",
+      password:""
+    }}
+    validationSchema={validate}
+    onSubmit={handleSubmit}
+    >
+      {formik => (
+        
+        <Form>
+
+                
                 <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                   <div className="relative">
-                    <input
-                      autocomplete="off"
-                      id="email"
-                      name="email"
+                    <TextField
+                      name="username"
                       type="text"
-                      className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
-                      placeholder="Your name"
                     />
                     <label
                       for="email"
@@ -37,13 +66,9 @@ function SignupForm() {
                     </label>
                   </div>
                   <div className="relative">
-                    <input
-                      autocomplete="off"
-                      id="email"
-                      name="email"
-                      type="text"
-                      className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
-                      placeholder="Email address"
+                  <TextField
+                       name="email"
+                       type="text"
                     />
                     <label
                       for="email"
@@ -53,13 +78,9 @@ function SignupForm() {
                     </label>
                   </div>
                   <div className="relative">
-                    <input
-                      autocomplete="off"
-                      id="password"
-                      name="password"
-                      type="password"
-                      className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
-                      placeholder="Password"
+                  <TextField
+                       name="password"
+                       type="password"
                     />
                     <label
                       for="password"
@@ -69,12 +90,15 @@ function SignupForm() {
                     </label>
                   </div>
                   <div className="relative flex justify-between items-center">
-                    <button className="bg-blue-500 text-white rounded-md px-2 py-1">
+                    <button type="submit" className="bg-blue-500 text-white rounded-md px-2 py-1">
                       Submit
                     </button>
                   <Link to={'/login'}> <small className="text-blue-700 hover:text-blue-400 cursor-pointer ">Already have account</small></Link> 
                   </div>
                 </div>
+                </Form>
+                 )}
+      </Formik>
               </div>
             </div>
           </div>
