@@ -1,12 +1,13 @@
 const express = require("express");
 const { signup ,login } = require("../controllers/userController");
 const { verifyJWT } = require("../middleware/authMiddleware");
-const { addTodos, getTodos, deleteTodo } = require("../controllers/todoController")
+const { addTodos, getTodos, deleteTodo ,editTodo} = require("../controllers/todoController")
 const router = express.Router()
 
 
 
 router.post("/signup",signup)
+
 router.post("/login",login)
 
 
@@ -22,10 +23,7 @@ router.delete('/todos/:id',verifyJWT, deleteTodo);
 
   
   // PUT /todos/:id
-  router.put('/todos/:id', (req, res) => {
-    // Implementation for updating a specific todo in MongoDB
-    res.send(`PUT /todos/${req.params.id}`);
-  });
+  router.put('/edit-todo/:id',verifyJWT ,editTodo);
   
 
 module.exports = router;

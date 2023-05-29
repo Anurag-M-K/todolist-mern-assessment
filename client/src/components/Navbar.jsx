@@ -8,7 +8,6 @@ function Navbar() {
 
   useEffect(() => {
     const user = localStorage.getItem('user');
-    console.log("user ",user)
     if (user) {
       const { username } = JSON.parse(user);
       setUserName(username);
@@ -17,6 +16,7 @@ function Navbar() {
 
   const handleSignOut = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     navigate('/login');
   };
 

@@ -1,40 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 
-function TodoForm({setTodos}) {
+function TodoForm({ setTodos, editTodo, setEditTodo }) {
   const [isRotating, setIsRotating] = useState(false);
   const initialValues = {
     todo: '',
   };
 
+  console.log("edittod ",editTodo,setEditTodo)
+
   const validationSchema = Yup.object({
     todo: Yup.string().required('Todo is required'),
   });
-  const handleSubmit = async (values, { resetForm }) => {
 
+  useEffect(() => {
+    if (editTodo) {
+      initialValues.todo = editTodo.todo;
+    }
+  }, [editTodo]);
+
+  const handleSubmit = async (values, { resetForm }) => {
     try {
-      const token = localStorage.getItem('token'); // Get the token from localStorage
+      const token = localStorage.getItem('token');
       const config = {
         headers: {
-          Authorization: token, // Add the token to the headers
+          Authorization: token,
         },
       };
-        setIsRotating(true);
 
-      const response = await axios.post('http://localhost:8080/api/todos', values, config);
-     const getTodos = await axios.get('http://localhost:8080/api/todos', config);
-     setIsRotating(false);
+      setIsRotating(true);
 
-     setTodos(getTodos.data.todos)
+      if (editTodo) {
+        await axios.put(`http://localhost:8080/api/todos/${editTodo._id}`, values, config);
+        setTodos((prevTodos) =>
+          prevTodos.map((todo) => {
+            if (todo._id === editTodo._id) {
+              return { ...todo, todo: values.todo };
+            }
+            return todo;
+          })
+        );
+        setEditTodo(null);
+      } else {
+        await axios.post('http://localhost:8080/api/todos', values, config);
+        const response = await axios.get('http://localhost:8080/api/todos', config);
+        setTodos(response.data.todos);
+      }
+
+      setIsRotating(false);
       resetForm();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
-  
 
   return (
     <div className="box py-7 px-4 md:w-[60%] w-full border bg-white shadow-lg shadow-left shadow-right shadow-top shadow-bottom rounded-lg">
@@ -47,7 +68,7 @@ function TodoForm({setTodos}) {
               type="text"
               name="todo"
             />
-                <button
+            <button
               type="submit"
               className={`bg-blue-800 rounded-[4px] me-4 box hover:scale-90 duration-300 ease-in-out cursor-pointer flex items-center p-4 ${
                 isRotating ? 'rotate' : ''

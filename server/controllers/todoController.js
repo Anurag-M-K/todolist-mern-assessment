@@ -114,8 +114,48 @@ const deleteTodo = async (req, res) => {
 };
 
 
+const editTodo = async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const userId = res.locals._id;
+    const updatedTodo = req.body.todo;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    const todo = user.todos.find((t) => t._id.toString() === todoId);
+    if (!todo) {
+      return res.status(404).json({
+        success: false,
+        message: 'Todo not found',
+      });
+    }
+
+    // Update the todo with the new value
+    todo.todo = updatedTodo;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Todo updated successfully',
+      todo,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'An error occurred while updating the todo.' });
+  }
+}
+
+
 module.exports = {
   addTodos,
   getTodos,
-  deleteTodo
+  deleteTodo,
+  editTodo
 };

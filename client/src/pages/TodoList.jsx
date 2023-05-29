@@ -6,6 +6,9 @@ import TodoItem from '../components/TodoItem';
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
+  const [editTodo, setEditTodo] = useState(false);
+  const [read,setRead] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const token = localStorage.getItem('token');
   const config = {
@@ -28,13 +31,22 @@ function TodoList() {
     getTodos();
   }, []);
 
-  console.log("from alll ",todos)
+
+  const handleRead = (todo) => {
+    console.log("read ",todo)
+    if(read === false){
+      setRead(true)
+    }else{
+      setRead(false)
+    }
+  }
 
   return (
-    <div className='lg:px-44 px-5 flex flex-col justify-center gap-y-4 items-center'>
+    <div className={` ${editTodo ? "blur-sm" : ""}  lg:px-44 px-5 flex flex-col justify-center gap-y-4 items-center`}>
       <Navbar />
-      <TodoForm setTodos={setTodos} />
-      <TodoItem setTodos={setTodos} todos={todos} />
+      <TodoForm editTodo={editTodo} setEditTodo={setEditTodo} setTodos={setTodos} />
+      <TodoItem setEditTodo={setEditTodo} read={read} handleRead={handleRead} setTodos={setTodos} todos={todos }  />
+    
     </div>
   );
 }

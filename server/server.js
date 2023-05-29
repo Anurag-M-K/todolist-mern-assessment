@@ -4,6 +4,7 @@ const userRouter = require("./routes/userRouter");
 require("dotenv").config()
 const db = require("./config/connection");
 const cors = require("cors");
+const PORT = 8080
 
 app.use(cors())
 
@@ -23,6 +24,6 @@ app.use(express.json());
 
 
 app.use("/api",userRouter);
-app.listen(process.env.PORT , ()=>{
-console.log(`Server running at ${`http://localhost:${process.env.PORT}`}`)
+app.listen(PORT , ()=>{
+console.log(`Server running at ${`http://localhost:${PORT}`}`)
 })

@@ -38,7 +38,6 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  console.log("req body ",req.body)
     try {
       const { email, password } = req.body;
   
