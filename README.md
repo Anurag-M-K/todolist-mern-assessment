@@ -7,11 +7,13 @@ This is a simple to-do list application built using the MERN (MongoDB, Express.j
 
 1. Clone the repository:
   ```bash
-   git clone https://github.com/your-username/mern-todo-list.git
+   git clone https://github.com/Anurag-M-K/todolist-mern-assessment.git
    
-   cd mern-todo-list
+   cd todolist-mern-assessment
    
    npm install
    
    Start the development server:
    npm start
+
+Open your browser and visit http://localhost:5173 to access the to-do list application.
